@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 2020_10_23_143943) do
     t.string "token", null: false
     t.decimal "limit", precision: 8, scale: 2, default: "0.0"
     t.decimal "balance", precision: 8, scale: 2, default: "0.0"
+    t.datetime "limit_updated_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_accounts_on_user_id", unique: true
@@ -43,9 +44,10 @@ ActiveRecord::Schema.define(version: 2020_10_23_143943) do
     t.integer "operation_type", null: false
     t.integer "operation_nature", null: false
     t.decimal "value", precision: 8, scale: 2, default: "0.0"
+    t.boolean "completed", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["account_id"], name: "index_transactions_on_account_id", unique: true
+    t.index ["account_id"], name: "index_transactions_on_account_id"
   end
 
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

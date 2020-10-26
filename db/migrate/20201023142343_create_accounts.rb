@@ -8,6 +8,7 @@ class CreateAccounts < ActiveRecord::Migration[6.0]
       t.string :token, null: false
       t.decimal :limit, precision: 8, scale: 2, default: 0.0
       t.decimal :balance, precision: 8, scale: 2, default: 0.0
+      t.datetime :limit_updated_at
 
       t.timestamps null: false
     end
