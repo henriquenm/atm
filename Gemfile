@@ -7,6 +7,7 @@ gem 'rails', '~> 6.0.3', '>= 6.0.3.3'
 gem 'mysql2', '0.5.2'
 gem 'puma', '~> 4.1'
 gem 'bootsnap', '>= 1.4.2', require: false
+gem 'bcrypt'
 
 
 group :development, :test do
@@ -15,6 +16,7 @@ end
 
 group :development do
   gem 'listen', '~> 3.2'
+  gem 'pry'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
