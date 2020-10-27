@@ -8,7 +8,7 @@ module Api
         account.set_account_attributes
 
         if user.save
-          render json: { account_number: account.number, account_agency: account.agency, account_token: account.token }
+          render json: { account: { number: account.number, agency: account.agency, token: account.token} }
         else
           render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
         end

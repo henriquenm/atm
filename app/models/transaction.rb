@@ -31,18 +31,18 @@ class Transaction < ApplicationRecord
     transaction
   end
 
-  def self.withdraw(account, transaction_id, value)
-    transaction = Transaction.find(transaction_id)
+  # def self.withdraw(account, transaction_id, value)
+  #   transaction = Transaction.find(transaction_id)
 
-    if transaction
-      transaction.completed = true
-      transaction.save
+  #   if transaction
+  #     transaction.completed = true
+  #     transaction.save
 
-      account.update_balance(-value)
-    end
+  #     account.update_balance(-value)
+  #   end
 
-    transaction
-  end
+  #   transaction
+  # end
 
   # TODO
   # def self.pre_withdraw(account, value)
@@ -75,7 +75,7 @@ class Transaction < ApplicationRecord
       deposit_total = transactions.pluck(:value).inject { |sum, x| sum + x }
       deposit_total + value
     else
-      0
+      value
     end
   end
 

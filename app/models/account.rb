@@ -3,7 +3,7 @@ class Account < ApplicationRecord
   has_many :transactions
 
   validates_presence_of :number, :agency, :token, :limit, :balance, :user
-  validates_uniqueness_of :number, :token
+  validates_uniqueness_of :number, :token, case_sensitive: true
 
   def set_account_attributes
     self.number = generate_number

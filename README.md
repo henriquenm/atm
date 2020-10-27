@@ -41,6 +41,13 @@ development:
   username: root
   password: rootpassword
   host: localhost
+
+test:
+  <<: *default
+  database: atm_test
+  username: root
+  password: rootpassword
+  host: localhost
 ```
 
 After database configuration file is created, run the following commands to create database and run migrations.
