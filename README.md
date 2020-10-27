@@ -70,7 +70,7 @@ When you run the command above, the API will create user, address and the accoun
 {"account_number":"4717-5","account_agency":"6373","account_token":"c49d09e1b3261d36ffa1d494139c1d0c"}
 ```
 
-To make transactions and get account informations, you will need to use the account_token that returned.
+To make transactions and get account informations, you will need to use the account_token for authentication.
 
 ### Show balance:
 ```bash
@@ -91,14 +91,14 @@ If you try to update limit before of 10 minutes that you updated, should return 
 {"errors":["Você atualizou seu limite recentemente, tente novamente em 7 minutos."]}
 ```
 
-### Transactions
-#### Transactions Statement:
+## Transactions
+### Transactions Statement:
 ```bash
 curl -H "Authorization: Token c49d09e1b3261d36ffa1d494139c1d0c" http://localhost:3000/api/v1/transactions/statement # return all transactions made on last 7 days
 curl -H "Authorization: Token c49d09e1b3261d36ffa1d494139c1d0c" http://localhost:3000/api/v1/transactions/statement?date=26/10/2020
 ```
 
-#### Deposit
+### Deposit
 ```bash
 curl -d '{"value":150}' -H "Authorization: Token c49d09e1b3261d36ffa1d494139c1d0c" -H "Content-Type: application/json" -X PUT http://localhost:3000/api/v1/transactions/deposit
 
@@ -111,9 +111,9 @@ If you try to deposit more than R$ 800 in the same day, you should see:
 {"errors":["Você atingiu o limite diário de R$ 800, tente novamente amanhã."]}
 ```
 
-#### Withdraw
+### Withdraw
 
-#### Transfer
+### Transfer
 ```bash
 curl -d '{"account_number":"5371-4","value":150}' -H "Authorization: Token c49d09e1b3261d36ffa1d494139c1d0c" -H "Content-Type: application/json" -X PUT http://localhost:3000/api/v1/transactions/transfer
 
