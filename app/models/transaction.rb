@@ -31,26 +31,27 @@ class Transaction < ApplicationRecord
     transaction
   end
 
-  # def self.withdraw(account, transaction_id, value)
-  #   transaction = Transaction.find(transaction_id)
+  def self.withdraw(account, transaction_id)
+    transaction = Transaction.find(transaction_id)
 
-  #   if transaction
-  #     transaction.completed = true
-  #     transaction.save
+    if transaction
+      transaction.completed = true
+      transaction.save
 
-  #     account.update_balance(-value)
-  #   end
+      account.update_balance(-transaction.value)
+    end
 
-  #   transaction
-  # end
+    transaction
+  end
 
-  # TODO
-  # def self.pre_withdraw(account, value)
-  #   transaction = Transaction.create(account: account, operation_type: 1, operation_nature: 1, value: value, completed: false)
-  #   available_notes = [100, 50, 20, 10, 5, 2]
-  #   notes = calculate_money_notes(value, available_notes)
-  #   notes.delete_if { |k, v| v == 0 }
-  # end
+  def self.pre_withdraw(account, value)
+    transaction = Transaction.create(account: account, operation_type: 1, operation_nature: 1, value: value, completed: false)
+    available_notes = [100, 50, 20, 10, 5, 2]
+    notes = calculate_money_notes(value, available_notes)
+    notes = notes.delete_if { |k, v| v == 0 }
+
+    [transaction, notes]
+  end
 
   def self.transfer(account, target_account_number, value)
     target_account = Account.find_by(number: target_account_number)
@@ -79,16 +80,15 @@ class Transaction < ApplicationRecord
     end
   end
 
-  # TODO
-  # def self.calculate_money_notes(value, available)
-  #   note, *rest = available
-  #   if rest.empty?
-  #     return { note => 0 } if value.zero?
-  #     return nil if (value % note) > 0
-  #     return { note => value/note }
-  #   end
-  #   last = nil
-  #   amount = [value/note].min.downto(0).find { |amount| last = calculate_money_notes(value-amount*note, rest) }
-  #   amount.nil? ? nil : { note => amount }.merge(last)
-  # end
+  def self.calculate_money_notes(value, available)
+    note, *rest = available
+    if rest.empty?
+      return { note => 0 } if value.zero?
+      return nil if (value % note) > 0
+      return { note => value/note }
+    end
+    last = nil
+    amount = [value/note].min.downto(0).find { |amount| last = calculate_money_notes(value-amount*note, rest) }
+    amount.nil? ? nil : { note => amount }.merge(last)
+  end
 end

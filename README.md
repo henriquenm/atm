@@ -119,6 +119,15 @@ If you try to deposit more than R$ 800 in the same day, you should see:
 ```
 
 ### Withdraw
+```bash
+curl -d '{"value":1000}' -H "Authorization: Token c49d09e1b3261d36ffa1d494139c1d0c" -H "Content-Type: application/json" -X PUT http://localhost:3000/api/v1/transactions/withdraw
+
+{"transaction_id":19,"available_notes":{"100":10}} # return
+
+curl -d '{"transaction_id":19}' -H "Authorization: Token c49d09e1b3261d36ffa1d494139c1d0c" -H "Content-Type: application/json" -X PUT http://localhost:3000/api/v1/transactions/withdraw
+
+{"message":"Saque realizado com sucesso!","balance":"-100.0"}
+```
 
 ### Transfer
 ```bash

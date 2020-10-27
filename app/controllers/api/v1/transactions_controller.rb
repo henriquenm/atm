@@ -19,21 +19,23 @@ module Api
         end
       end
 
-      # TODO
-      # def withdraw
-      #   if params[:transaction_id]
-      #     transaction = Transaction.withdraw(current_account, params[:transaction_id], params[:value])
+      def withdraw
+        if params[:transaction_id]
+          transaction = Transaction.withdraw(current_account, params[:transaction_id])
 
-      #     if transaction
-      #       render json: { message: 'Saque realizado com sucesso!', balance: current_account.balance }
-      #     else
-      #       render json: { errors: 'Transação não encontrada!'' }
-      #     end
-      #   else
-      #     transaction = Transaction.pre_withdraw(current_account, params[:value])
-      #     # ????
-      #   end
-      # end
+          if transaction
+            render json: { message: 'Saque realizado com sucesso!', balance: current_account.balance }
+          else
+            render json: { errors: 'Transação não encontrada!' }
+          end
+        else
+          transaction, notes = Transaction.pre_withdraw(current_account, params[:value])
+
+          if transaction and notes
+            render json: { transaction_id: transaction.id, available_notes: notes }
+          end
+        end
+      end
 
       def transfer
         transaction = Transaction.transfer(current_account, params[:account_number], params[:value])
