@@ -25,7 +25,7 @@ class Transaction < ApplicationRecord
       account.update_balance(value)
     else
       transaction.save
-      transaction.errors[:base] << "Você atingiu o limite diário de R$ 800, tente novamente amanhã."
+      transaction.errors[:base] << 'Você atingiu o limite diário de R$ 800, tente novamente amanhã.'
     end
 
     transaction
@@ -56,41 +56,39 @@ class Transaction < ApplicationRecord
     target_account = Account.find_by(number: target_account_number)
 
     if target_account
-      out_transaction = Transaction.create(account: account, operation_type: 2, operation_nature: 1, value: value, completed: true)
+      out_transaction = Transaction.create(account: account, operation_type: 'transfer', operation_nature: 'out', value: value, completed: true)
       account.update_balance(-value)
 
-      in_transaction = Transaction.create(account: target_account, operation_type: 2, operation_nature: 0, value: value, completed: true)
+      Transaction.create(account: target_account, operation_type: 'transfer', operation_nature: 'in', value: value, completed: true)
       target_account.update_balance(value)
     else
-      out_transaction = Transaction.create(account: account, operation_type: 2, operation_nature: 1, value: value, completed: false)
-      out_transaction.errors[:base] << "Número da conta não encontrado. Verifique e tente novamente."
+      out_transaction = Transaction.create(account: account, operation_type: 2, operation_nature: 1, value: value)
+      out_transaction.errors[:base] << 'Número da conta não encontrado. Verifique e tente novamente.'
     end
 
     out_transaction
   end
 
-  private
-
-    def self.calculate_deposit_total(account, value)
-      transactions = account.transactions.completed.deposits.where(created_at: Time.now.beginning_of_day..Time.now.end_of_day)
-      unless transactions.empty?
-        deposit_total = transactions.pluck(:value).inject{|sum, x| sum + x}
-        deposit_total + value
-      else
-        0
-      end
+  def self.calculate_deposit_total(account, value)
+    transactions = account.transactions.completed.deposits.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
+    if transactions.present?
+      deposit_total = transactions.pluck(:value).inject { |sum, x| sum + x }
+      deposit_total + value
+    else
+      0
     end
+  end
 
-    # TODO
-    # def self.calculate_money_notes(value, available)
-    #   note, *rest = available
-    #   if rest.empty?
-    #     return { note => 0 } if value.zero?
-    #     return nil if (value % note) > 0
-    #     return { note => value/note }
-    #   end
-    #   last = nil
-    #   amount = [value/note].min.downto(0).find { |amount| last = calculate_money_notes(value-amount*note, rest) }
-    #   amount.nil? ? nil : { note => amount }.merge(last)
-    # end
+  # TODO
+  # def self.calculate_money_notes(value, available)
+  #   note, *rest = available
+  #   if rest.empty?
+  #     return { note => 0 } if value.zero?
+  #     return nil if (value % note) > 0
+  #     return { note => value/note }
+  #   end
+  #   last = nil
+  #   amount = [value/note].min.downto(0).find { |amount| last = calculate_money_notes(value-amount*note, rest) }
+  #   amount.nil? ? nil : { note => amount }.merge(last)
+  # end
 end

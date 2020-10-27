@@ -7,7 +7,7 @@ class User < ApplicationRecord
   validates_presence_of :full_name, :cpf, :birth_date, :gender, :password_digest, :address, :account
   validates_uniqueness_of :cpf
 
-  accepts_nested_attributes_for :address, :allow_destroy => true
+  accepts_nested_attributes_for :address, allow_destroy: true
 
   enum gender: { male: 0, female: 1, other: 2 }
 end

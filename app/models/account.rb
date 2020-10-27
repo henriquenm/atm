@@ -13,15 +13,15 @@ class Account < ApplicationRecord
   end
 
   def generate_number
-    number = ""
-    4.times{ number += rand(0..9).to_s }
-    number += "-#{rand(0..9).to_s}"
+    number = ''
+    4.times { number += rand(0..9).to_s }
+    number += "-#{rand(0..9)}"
     number
   end
 
   def generate_agency
-    agency = ""
-    4.times{ agency += rand(0..9).to_s }
+    agency = ''
+    4.times { agency += rand(0..9).to_s }
     agency
   end
 
@@ -34,22 +34,22 @@ class Account < ApplicationRecord
   end
 
   def update_limit(limit)
-    if self.limit_updated_at.nil?
-      self.update(limit: limit, limit_updated_at: DateTime.now)
+    if limit_updated_at.nil?
+      update(limit: limit, limit_updated_at: Time.zone.now)
     else
-      time_diff = ((Time.now - self.limit_updated_at) / 1.minute).round
+      time_diff = ((Time.zone.now - limit_updated_at) / 1.minute).round
       try_again_time = 10 - time_diff
 
       if time_diff > 10
-        self.update(limit: limit, limit_updated_at: DateTime.now)
+        update(limit: limit, limit_updated_at: Time.zone.now)
       else
-        self.errors[:base] << "Você atualizou seu limite recentemente, tente novamente em #{try_again_time} minutos."
+        errors[:base] << "Você atualizou seu limite recentemente, tente novamente em #{try_again_time} minutos."
       end
     end
   end
 
   def update_balance(value)
     self.balance += value
-    self.save
+    save
   end
 end
