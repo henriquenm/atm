@@ -34,13 +34,17 @@ class Account < ApplicationRecord
   end
 
   def update_limit(limit)
-    time_diff = ((Time.now - self.limit_updated_at) / 1.minute).round
-    try_again_time = 10 - time_diff
-
-    if time_diff > 10
+    if self.limit_updated_at.nil?
       self.update(limit: limit, limit_updated_at: DateTime.now)
     else
-      self.errors[:base] << "Você atualizou seu limite recentemente, tente novamente em #{try_again_time} minutos."
+      time_diff = ((Time.now - self.limit_updated_at) / 1.minute).round
+      try_again_time = 10 - time_diff
+
+      if time_diff > 10
+        self.update(limit: limit, limit_updated_at: DateTime.now)
+      else
+        self.errors[:base] << "Você atualizou seu limite recentemente, tente novamente em #{try_again_time} minutos."
+      end
     end
   end
 
