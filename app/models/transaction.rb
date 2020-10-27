@@ -72,10 +72,13 @@ class Transaction < ApplicationRecord
   private
 
     def self.calculate_deposit_total(account, value)
-      transactions = account.transactions.deposits.completed.where(created_at: Time.now.beginning_of_day..Time.now.end_of_day)
-      deposit_total = transactions.pluck(:value).inject{|sum, x| sum + x}
-
-      deposit_total + value
+      transactions = account.transactions.completed.deposits.where(created_at: Time.now.beginning_of_day..Time.now.end_of_day)
+      unless transactions.empty?
+        deposit_total = transactions.pluck(:value).inject{|sum, x| sum + x}
+        deposit_total + value
+      else
+        0
+      end
     end
 
     # TODO
