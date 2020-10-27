@@ -74,7 +74,7 @@ curl -d '{"user": {"full_name":"João","cpf":"123.456.789-10","birth_date":"11/0
 When you run the command above, the API will create user, address and the account. And will return the account generated informations.
 
 ```bash
-{"account_number":"4717-5","account_agency":"6373","account_token":"c49d09e1b3261d36ffa1d494139c1d0c"}
+{"account":{"number":"4717-5","agency":"6373","token":"c49d09e1b3261d36ffa1d494139c1d0c"}}
 ```
 
 To make transactions and get account informations, you will need to use the account_token for authentication.
@@ -83,14 +83,14 @@ To make transactions and get account informations, you will need to use the acco
 ```bash
 curl -H "Authorization: Token c49d09e1b3261d36ffa1d494139c1d0c" http://localhost:3000/api/v1/accounts/show_balance
 
-{"balance":"123.0"} # return
+{"account":{"balance":"123.0"}} # return
 ```
 
 ### Update Limit:
 ```bash
 curl -d '{"limit_value":500}' -H "Authorization: Token c49d09e1b3261d36ffa1d494139c1d0c" -H "Content-Type: application/json" -X PUT http://localhost:3000/api/v1/accounts/update_limit
 
-{"message":"Limite da conta atualizado com sucesso!","limit":"500.0"} # return
+{"message":"Limite da conta atualizado com sucesso!","account":{"limit":"500.0"}} # return
 ```
 
 If you try to update limit before of 10 minutes that you updated, should return something like this:
