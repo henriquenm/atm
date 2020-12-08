@@ -41,10 +41,9 @@ ActiveRecord::Schema.define(version: 2020_10_23_143943) do
 
   create_table "transactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "account_id"
-    t.integer "operation_type", null: false
+    t.string "type", null: false
     t.integer "operation_nature", null: false
     t.decimal "value", precision: 8, scale: 2, default: "0.0"
-    t.boolean "completed", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["account_id"], name: "index_transactions_on_account_id"

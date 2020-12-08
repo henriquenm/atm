@@ -7,8 +7,14 @@ module Api
         end
       end
 
-      def update_limit
+      def show_limit
         if current_account
+          render json: { account: { limit: current_account.limit } }
+        end
+      end
+
+      def update_limit
+        if current_account && params[:limit_value].present?
           current_account.update_limit(params[:limit_value])
 
           if current_account.errors.empty?
@@ -16,6 +22,8 @@ module Api
           else
             render json: { errors: current_account.errors.full_messages }, status: :unprocessable_entity
           end
+        else
+          render json: { errors: 'Parâmetro limit_value não está presente!' }, status: :unprocessable_entity
         end
       end
     end

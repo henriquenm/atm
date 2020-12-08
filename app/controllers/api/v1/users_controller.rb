@@ -2,10 +2,8 @@ module Api
   module V1
     class UsersController < ActionController::API
       def create
-        user = User.new(user_params.except(user_params[:address_attributes]))
-        user.build_address(user_params[:address_attributes])
-        account = user.build_account
-        account.set_account_attributes
+        user = User.new(user_params)
+        account = user.build_account.set_account_attributes
 
         if user.save
           render json: { account: { number: account.number, agency: account.agency, token: account.token} }

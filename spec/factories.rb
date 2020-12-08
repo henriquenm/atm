@@ -57,43 +57,37 @@ FactoryBot.define do
     limit_updated_at { Time.zone.now }
   end
 
-  factory :deposit_transaction, class: Transaction do
-    operation_type { "deposit" }
+  factory :deposit_transaction, class: Transaction::Deposit do
     operation_nature { "in" }
     value { "160" }
-    completed { true }
     created_at { Time.zone.now }
   end
 
-  factory :deposit_transaction_2, class: Transaction do
-    operation_type { "deposit" }
+  factory :deposit_transaction_2, class: Transaction::Deposit do
+    type { "Transaction::Deposit" }
     operation_nature { "in" }
     value { "600" }
-    completed { true }
     created_at { Time.zone.now }
   end
 
-  factory :withdraw_transaction, class: Transaction do
-    operation_type { "withdraw" }
+  factory :withdraw_transaction, class: Transaction::Withdraw do
+    type { "Transaction::Withdraw" }
     operation_nature { "out" }
     value { "100" }
-    completed { true }
     created_at { Time.zone.now }
   end
 
-  factory :out_transfer_transaction, class: Transaction do
-    operation_type { "transfer" }
+  factory :out_transfer_transaction, class: Transaction::Transfer do
+    type { "Transaction::Transfer" }
     operation_nature { "out" }
     value { "90" }
-    completed { true }
     created_at { 8.days.ago }
   end
 
-  factory :in_transfer_transaction, class: Transaction do
-    operation_type { "transfer" }
+  factory :in_transfer_transaction, class: Transaction::Transfer do
+    type { "Transaction::Transfer" }
     operation_nature { "in" }
     value { "90" }
-    completed { true }
     created_at { 8.days.ago }
   end
 end

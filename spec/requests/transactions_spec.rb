@@ -28,7 +28,7 @@ describe 'Create successfull deposit transactions in PUT /api/v1/transactions/de
 
   it 'return message and account balance' do
     account.reload
-    expected_json = {'message':'Depósito realizado com sucesso!','balance':"#{account.balance}" }.to_json
+    expected_json = {'message':'Depósito realizado com sucesso!','account':{'balance':"#{account.balance}"} }.to_json
     expect(JSON.parse(response.body)).to eq(JSON.parse(expected_json))
   end
 end
@@ -46,7 +46,7 @@ describe 'Create fail deposit transactions in PUT /api/v1/transactions/deposit',
 
   it 'return error message and account balance' do
     account.reload
-    expect(JSON.parse(response.body)["errors"][0]).to eq("Você atingiu o limite diário de R$ 800, tente novamente amanhã.")
+    expect(JSON.parse(response.body)["errors"][0]).to eq("O valor do depósito excede o limite diário de R$ 800.")
   end
 end
 

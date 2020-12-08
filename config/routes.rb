@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
       namespace :accounts do
         get :show_balance
+        get :show_limit
         put :update_limit
       end
 

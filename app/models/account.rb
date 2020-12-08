@@ -1,6 +1,9 @@
 class Account < ApplicationRecord
   belongs_to :user
   has_many :transactions
+  has_many :deposits, class_name: "Transaction::Deposit"
+  has_many :withdraws, class_name: "Transaction::Withdraw"
+  has_many :transfers, class_name: "Transaction::Transfer"
 
   validates_presence_of :number, :agency, :token, :limit, :balance, :user
   validates_uniqueness_of :number, :token, case_sensitive: true
@@ -10,6 +13,8 @@ class Account < ApplicationRecord
     self.agency = generate_agency
     self.token = generate_token
     self.limit = generate_limit
+
+    self
   end
 
   def generate_number
@@ -34,17 +39,13 @@ class Account < ApplicationRecord
   end
 
   def update_limit(limit)
-    if limit_updated_at.nil?
+    time_diff = ((Time.zone.now - limit_updated_at) / 1.minute).round rescue nil
+
+    if time_diff.nil? || time_diff > 10
       update(limit: limit, limit_updated_at: Time.zone.now)
     else
-      time_diff = ((Time.zone.now - limit_updated_at) / 1.minute).round
-      try_again_time = 10 - time_diff
-
-      if time_diff > 10
-        update(limit: limit, limit_updated_at: Time.zone.now)
-      else
-        errors[:base] << "Você atualizou seu limite recentemente, tente novamente em #{try_again_time} minutos."
-      end
+      try_again_time = (10 - time_diff)
+      errors[:base] << "Você atualizou seu limite recentemente, tente novamente em #{try_again_time} minutos."
     end
   end
 

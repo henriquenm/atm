@@ -4,46 +4,48 @@ module Api
       def statement
         transactions = Transaction.get_statement(current_account, params[:date])
 
-        if transactions
-          render json: { transactions: transactions }
+        if transactions.present?
+          render json: { transactions: transactions }, status: :ok
+        else
+          render json: { message: 'Nenhuma transação encontrada!' }, status: :not_found
         end
       end
 
       def deposit
-        transaction = Transaction.deposit(current_account, params[:value])
+        transaction = Transaction::Deposit.make_deposit(current_account, params[:value])
 
         if transaction.errors.empty?
-          render json: { message: 'Depósito realizado com sucesso!', balance: current_account.balance }
+          render json: { message: 'Depósito realizado com sucesso!', account: { balance: current_account.balance } }, status: :ok
         else
-          render json: { errors: transaction.errors.full_messages }
+          render json: { errors: transaction.errors.full_messages }, status: :unprocessable_entity
         end
       end
 
       def withdraw
         if params[:transaction_id]
-          transaction = Transaction.withdraw(current_account, params[:transaction_id])
+          transaction = Transaction::Withdraw.make_withdraw(current_account, params[:transaction_id])
 
           if transaction
-            render json: { message: 'Saque realizado com sucesso!', balance: current_account.balance }
+            render json: { message: 'Saque realizado com sucesso!', balance: current_account.balance }, status: :ok
           else
-            render json: { errors: 'Transação não encontrada!' }
+            render json: { errors: 'Transação não encontrada!' }, status: :not_found
           end
         else
-          transaction, notes = Transaction.pre_withdraw(current_account, params[:value])
+          transaction, notes = Transaction::Withdraw.pre_withdraw(current_account, params[:value])
 
-          if transaction and notes
-            render json: { transaction_id: transaction.id, available_notes: notes }
+          if transaction && notes
+            render json: { transaction_id: transaction.id, available_notes: notes }, status: :ok
           end
         end
       end
 
       def transfer
-        transaction = Transaction.transfer(current_account, params[:account_number], params[:value])
+        transaction = Transaction::Transfer.make_transfer(current_account, params[:account_number], params[:value])
 
         if transaction.errors.empty?
-          render json: { message: 'Transferência realizada com sucesso!' }
+          render json: { message: 'Transferência realizada com sucesso!' }, status: :ok
         else
-          render json: { errors: transaction.errors.full_messages }
+          render json: { errors: transaction.errors.full_messages }, status: :unprocessable_entity
         end
       end
     end

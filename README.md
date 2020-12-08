@@ -1,7 +1,7 @@
 # ATM by Henrique
 
 ## Requirements
-  - Ruby 2.7.2
+  - Ruby 2.7.0
   - Rails 6.0.3
   - Mysql
 
@@ -84,6 +84,13 @@ To make transactions and get account informations, you will need to use the acco
 curl -H "Authorization: Token c49d09e1b3261d36ffa1d494139c1d0c" http://localhost:3000/api/v1/accounts/show_balance
 
 {"account":{"balance":"123.0"}} # return
+```
+
+### Show Limit:
+```bash
+curl -H "Authorization: Token c49d09e1b3261d36ffa1d494139c1d0c" http://localhost:3000/api/v1/accounts/show_limit
+
+{"account":{"limit":"500.0"}} # return
 ```
 
 ### Update Limit:
